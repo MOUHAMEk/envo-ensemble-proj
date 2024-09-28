@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer Avancement du Projet</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            width: 100%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main content */
+        main {
+            margin-top: 30px;
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button styles */
+        button {
+            background-color: #1abc9c;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            transition: background-color 0.3s ease;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #16a085;
+        }
+
+        /* Input styles */
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Overall progress text */
+        #overall-progress {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Footer styles */
+        footer {
+            text-align: center;
+            font-size: 18px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            header {
+                font-size: 24px;
+                padding: 20px;
+            }
+
+            main {
+                margin-top: 20px;
+                width: 95%;
+                padding: 15px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            input[type="number"] {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            #overall-progress {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Envoyer l'Avancement du Projet</h1>
+    </header>
+    <main>
+        <label for="rdc-progress">Avancement RDC:</label>
+        <input type="number" id="rdc-progress" placeholder="Avancement RDC en %">
+
+        <label for="r1-progress">Avancement R+1:</label>
+        <input type="number" id="r1-progress" placeholder="Avancement R+1 en %">
+
+        <label for="r2-progress">Avancement R+2:</label>
+        <input type="number" id="r2-progress" placeholder="Avancement R+2 en %">
+
+        <label for="r3-progress">Avancement R+3:</label>
+        <input type="number" id="r3-progress" placeholder="Avancement R+3 en %">
+
+        <label for="r4-progress">Avancement R+4:</label>
+        <input type="number" id="r4-progress" placeholder="Avancement R+4 en %">
+
+        <button id="calculate-overall-progress">Calculer l'Avancement Total</button>
+        <p id="overall-progress"></p>
+
+        <button id="submit-progress">Actualiser et Envoyer</button>
+    </main>
+    <footer>
+        MArisk
+    </footer>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOA0a_rjXqY99KXyyuHEiPOJDGGapZQUo",
+            authDomain: "suivi-49954.firebaseapp.com",
+            databaseURL: "https://suivi-49954-default-rtdb.firebaseio.com",
+            projectId: "suivi-49954",
+            storageBucket: "suivi-49954.appspot.com",
+            messagingSenderId: "141836603566",
+            appId: "1:141836603566:web:aaff934468238d958cdd3f",
+            measurementId: "G-3CMYEPPYK8"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Calculate overall progress
+        document.getElementById('calculate-overall-progress').addEventListener('click', () => {
+            const rdc = parseFloat(document.getElementById('rdc-progress').value) || 0;
+            const r1 = parseFloat(document.getElementById('r1-progress').value) || 0;
+            const r2 = parseFloat(document.getElementById('r2-progress').value) || 0;
+            const r3 = parseFloat(document.getElementById('r3-progress').value) || 0;
+            const r4 = parseFloat(document.getElementById('r4-progress').value) || 0;
+
+            const overallProgress = (rdc + r1 + r2 + r3 + r4) / 5;
+            document.getElementById('overall-progress').textContent = `Avancement total: ${overallProgress.toFixed(2)}%`;
+        });
+
+        // Submit progress
+        document.getElementById('submit-progress').addEventListener('click', () => {
+            const rdcProgress = parseFloat(document.getElementById('rdc-progress').value);
+            const r1Progress = parseFloat(document.getElementById('r1-progress').value);
+            const r2Progress = parseFloat(document.getElementById('r2-progress').value);
+            const r3Progress = parseFloat(document.getElementById('r3-progress').value);
+            const r4Progress = parseFloat(document.getElementById('r4-progress').value);
+            const overallProgress = (rdcProgress + r1Progress + r2Progress + r3Progress + r4Progress) / 5;
+
+            const data = {
+                rdcProgress,
+                r1Progress,
+                r2Progress,
+                r3Progress,
+                r4Progress,
+                overallProgress
+            };
+
+            firebase.database().ref('project-progress').push(data, function(error) {
+                if (error) {
+                    alert("Erreur lors de l'envoi des données.");
+                } else {
+                    alert("Données envoyées avec succès.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
